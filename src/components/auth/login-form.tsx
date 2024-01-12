@@ -29,6 +29,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  FormInput,
   Loader2,
   Mail,
   XCircle,
@@ -63,6 +64,7 @@ export default function LoginForm() {
         case "SUCCESS": {
           actionResponse.authType === "PASSWORD_WITH_2FA" &&
             twoFactorAuthenticationField.show();
+          setActionResponse(actionResponse);
           break;
         }
         case "FAILED": {
@@ -142,7 +144,7 @@ export default function LoginForm() {
                   <FormControl>
                     <div className="flex items-center gap-3">
                       <Input {...field} placeholder="Enter 2FA Code." />
-                      <Mail />
+                      <FormInput />
                     </div>
                   </FormControl>
                 </FormItem>

@@ -47,15 +47,7 @@ export default function ResetPasswordForm() {
     data,
   ) => {
     const actionResponse = await resetPassword(data);
-    switch (actionResponse.status) {
-      case "SUCCESS": {
-        setActionResponse(actionResponse);
-        break;
-      }
-      case "FAILED": {
-        setActionResponse(actionResponse);
-      }
-    }
+    setActionResponse(actionResponse);
   };
 
   return (

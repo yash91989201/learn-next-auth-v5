@@ -11,6 +11,7 @@ import { eq } from "drizzle-orm";
 
 import { createId } from "@paralleldrive/cuid2";
 import crypto from "crypto";
+import { auth } from "@/server/helpers/auth";
 
 async function generateVerificationToken(email: string) {
   const token = createId();
@@ -125,7 +126,7 @@ async function getTwoFactorConfirmationByUserId(userId: string) {
 
 async function generateTwoFactorToken(email: string) {
   const token = crypto.randomInt(100_000, 1_000_000).toString();
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
+  const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
 
   const existingToken = await getTwoFactorTokenByEmail(email);
   if (existingToken) {
@@ -147,16 +148,22 @@ async function generateTwoFactorToken(email: string) {
   };
 }
 
+async function currentUser() {
+  const session = await auth();
+  return session?.user;
+}
+
 export {
-  generateVerificationToken,
   getUserByEmail,
   getUserById,
   getVerificationTokenByEmail,
   getVerificationTokenByToken,
-  generatePasswordResetToken,
   getPasswordResetTokenByToken,
   getTwoFactorTokenByEmail,
   getTwoFactorTokenByToken,
   getTwoFactorConfirmationByUserId,
   generateTwoFactorToken,
+  generateVerificationToken,
+  generatePasswordResetToken,
+  currentUser,
 };

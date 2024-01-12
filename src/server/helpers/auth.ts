@@ -71,7 +71,7 @@ export const {
         const existing2FAConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id,
         );
-        console.log("existing2FAConfirmation");
+
         if (!existing2FAConfirmation) {
           return false;
         }
@@ -91,14 +91,21 @@ export const {
 
       token.role = existingUser.role;
       token.emailVerified = existingUser.emailVerified;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+
       return token;
     },
+
     async session({ session, token }) {
       if (token.sub && session.user) session.user.id = token.sub;
 
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
         session.user.emailVerified = token.emailVerified as boolean;
+      }
+
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
       }
 
       return session;

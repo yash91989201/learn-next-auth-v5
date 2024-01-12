@@ -10,7 +10,9 @@ function LoginWithGoogle() {
 
   return (
     <Button
+      type="submit"
       variant="outline"
+      disabled={pending}
       className="flex w-full items-center justify-center gap-3 "
     >
       {pending && <Loader2 className="animate-spin" />}
@@ -24,7 +26,9 @@ function LoginWithGithub() {
 
   return (
     <Button
+      type="submit"
       variant="outline"
+      disabled={pending}
       className="flex w-full items-center justify-center gap-3 "
     >
       {pending && <Loader2 className="animate-spin" />}
@@ -33,4 +37,20 @@ function LoginWithGithub() {
   );
 }
 
-export { LoginWithGithub, LoginWithGoogle };
+function LogoutButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      variant="ghost"
+      disabled={pending}
+      className="flex w-full items-center justify-center gap-3 text-lg"
+    >
+      {pending && <Loader2 className="animate-spin" />}
+      <span>Logout</span>
+    </Button>
+  );
+}
+
+export { LoginWithGithub, LoginWithGoogle, LogoutButton };

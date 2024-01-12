@@ -1,21 +1,28 @@
 import { Resend } from "resend";
 import { env } from "@/env";
+import VerificationEmail from "@/components/emails/verification-email";
+import PasswordResetEmail from "@/components/emails/password-reset-email";
+import TwoFactorAuthEmail from "@/components/emails/two-factor-auth-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
 async function sendVerificationEmail({
   email,
   token,
+  subject,
+  userName,
 }: {
   email: string;
   token: string;
+  subject: string;
+  userName: string;
 }) {
-  const confirmLink = `http://localhost:3000/auth/new-verification?token=${token}`;
+  const confirmationLink = `http://localhost:3000/auth/new-verification?token=${token}`;
   await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
-    subject: "Hello World",
-    html: `<p><a href=${confirmLink}>Confirm here</a></p>`,
+    subject,
+    react: VerificationEmail({ confirmationLink, userName }),
   });
 }
 
@@ -32,7 +39,9 @@ async function sendPasswordResetEmail({
     from: "onboarding@resend.dev",
     to: email,
     subject: "Reset your password",
-    html: `<p><a href=${passwordResetLink}>Reset Password</a></p>`,
+    react: PasswordResetEmail({
+      passwordResetLink,
+    }),
   });
 }
 
@@ -46,8 +55,10 @@ async function sendTwoFactorTokenEmail({
   await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
-    subject: "Reset your password",
-    html: `<p>Your confirmation token is ${token}</p>`,
+    subject: "2FA Code For Login",
+    react: TwoFactorAuthEmail({
+      twoFactorCode: token,
+    }),
   });
 }
 

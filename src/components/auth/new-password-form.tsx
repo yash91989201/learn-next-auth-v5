@@ -45,16 +45,7 @@ export default function NewPasswordForm() {
     data,
   ) => {
     const actionResponse = await newPassword(data);
-    switch (actionResponse.status) {
-      case "SUCCESS": {
-        setActionResponse(actionResponse);
-        break;
-      }
-      case "FAILED": {
-        setActionResponse(actionResponse);
-        break;
-      }
-    }
+    setActionResponse(actionResponse);
   };
 
   return (

@@ -1,5 +1,9 @@
 "use client";
+import Link from "next/link";
 import { Poppins } from "next/font/google";
+import { useSearchParams } from "next/navigation";
+// ACTIONS
+import { loginWithGithub, loginWithGoogle } from "@/server/actions/user";
 // UTILS
 import { cn } from "@/lib/utils";
 // CUSTOM COMPONENTS
@@ -9,8 +13,11 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { SocialLogin } from "@/components/auth/social-login";
-import { BackButton } from "@/components/auth/back-button";
+import { Button } from "@/components/ui/button";
+import {
+  LoginWithGoogle,
+  LoginWithGithub,
+} from "@/components/auth/auth-buttons";
 
 const poppinsFont = Poppins({
   subsets: ["latin"],
@@ -24,8 +31,11 @@ export default function AuthCardWrapper({
   backButtonHref,
   showSocial,
 }: AuthCardWrapperProps) {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   return (
-    <Card className="max-w-[480px] shadow-md">
+    <Card className="min-w-[400px] shadow-md">
       <CardHeader>
         <div className="flex w-full flex-col items-center justify-center gap-y-4">
           <h1 className={cn("text-3xl font-semibold", poppinsFont.className)}>
@@ -35,13 +45,26 @@ export default function AuthCardWrapper({
         </div>
       </CardHeader>
       <CardContent>{children}</CardContent>
-      {showSocial && (
-        <CardFooter>
-          <SocialLogin />
-        </CardFooter>
-      )}
-      <CardFooter>
-        <BackButton label={backButtonLabel} href={backButtonHref} />
+      <CardFooter className="flex flex-col gap-3">
+        {showSocial && (
+          <div className="flex w-full items-center gap-3">
+            <form
+              className="w-full"
+              action={() => loginWithGoogle(callbackUrl)}
+            >
+              <LoginWithGoogle />
+            </form>
+            <form
+              className="w-full"
+              action={() => loginWithGithub(callbackUrl)}
+            >
+              <LoginWithGithub />
+            </form>
+          </div>
+        )}
+        <Button variant="link" className="w-full font-normal" size="sm" asChild>
+          <Link href={backButtonHref}>{backButtonLabel}</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

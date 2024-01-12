@@ -42,21 +42,11 @@ export default function SignUpForm() {
     shouldUseNativeValidation: true,
     resolver: zodResolver(SignUpSchema),
   });
-  const { control, handleSubmit, formState, reset } = signUpForm;
+  const { control, handleSubmit, formState } = signUpForm;
 
   const signInAction: SubmitHandler<SignUpSchemaType> = async (data) => {
     const actionResponse = await signUpWithCredentials(data);
-    switch (actionResponse.status) {
-      case "SUCCESS": {
-        setActionResponse(actionResponse);
-        break;
-      }
-      case "FAILED": {
-        setActionResponse(actionResponse);
-        break;
-      }
-    }
-    reset();
+    setActionResponse(actionResponse);
   };
 
   return (

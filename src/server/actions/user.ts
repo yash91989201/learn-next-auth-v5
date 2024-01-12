@@ -80,10 +80,14 @@ async function loginWithCredentials(
     const verificationToken = await generateVerificationToken(
       existingUser.email,
     );
+
     await sendVerificationEmail({
       email: verificationToken.email,
       token: verificationToken.token,
+      subject: "Verify your Email.",
+      userName: existingUser.name!,
     });
+
     return {
       status: "SUCCESS",
       message: "Confirmation Email Sent.",
@@ -276,6 +280,8 @@ async function signUpWithCredentials(
   await sendVerificationEmail({
     email: verificationToken.email,
     token: verificationToken.token,
+    userName: name,
+    subject: "Confirm your SignUp.",
   });
 
   if (createNewUser.rowsAffected === 1) {
@@ -368,7 +374,7 @@ async function newPassword(
   return { status: "SUCCESS", message: "Password reset done." };
 }
 
-async function signOutUser() {
+async function logoutUser() {
   await signOut();
 }
 
@@ -378,7 +384,7 @@ export {
   loginWithGoogle,
   loginWithGithub,
   signUpWithCredentials,
-  signOutUser,
+  logoutUser,
   resetPassword,
   newPassword,
 };
